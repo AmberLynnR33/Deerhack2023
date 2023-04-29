@@ -38,7 +38,7 @@ class View:
         self._configure_main_screen()
 
 
-    def _create_main_frame(self) -> tk.Frame:
+    def _create_main_frame(self) -> None:
         self._main_frame = tk.Frame(self.base_screen)
 
         # Each subframe
@@ -47,6 +47,24 @@ class View:
         self._frame_money_in()
         self._frame_money_out()
         self._frame_goals()
+
+        self._tab_month_frame.grid(row=0, column=0)
+        self._tab_month_frame.columnconfigure(0, weight=1)
+        self._tab_month_frame.rowconfigure(0, weight=1)
+
+        self._money_in_frame.grid(row=1, column=0)
+        self._money_in_frame.columnconfigure(0, weight=1)
+        self._money_in_frame.rowconfigure(0, weight=1)
+
+        self._display_money_frame.grid(row=0, column=1)
+        self._display_money_frame.columnconfigure(0, weight=1)
+        self._display_money_frame.rowconfigure(0, weight=1)
+
+        self._goals_frame.grid(row=11, column=1)
+        self._goals_frame.columnconfigure(0, weight=1)
+        self._goals_frame.rowconfigure(0, weight=1)
+
+
 
 
     def _frame_tab_month(self) -> None:
