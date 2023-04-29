@@ -12,7 +12,7 @@ class View:
 
     def __init__(self):
         self.base_screen = tk.Tk()
-        self.base_screen.title("Financial Tracker")
+        self._configure_main_screen
 
         self.create_main_frame()
         self.create_menu()
@@ -40,3 +40,6 @@ class View:
 
     def _configure_main_screen(self) -> None:
         self.main_frame.grid(row=0, col=0, sticky='n s e w')
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.rowconfigure(0, weight=1)
+        self.base_screen.title("Financial Tracker")
