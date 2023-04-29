@@ -31,6 +31,7 @@ class View:
     _goals_frame: tk.Frame
 
     def __init__(self):
+        self.model = None
         self.base_screen = tk.Tk()
 
         self._create_main_frame()
