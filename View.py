@@ -58,15 +58,17 @@ class View:
         self._money_in_frame.columnconfigure(0, weight=1)
         self._money_in_frame.rowconfigure(0, weight=1)
 
+        self._money_out_frame.grid(row=2, column=0)
+        self._money_out_frame.columnconfigure(0, weight=1)
+        self._money_out_frame.rowconfigure(0, weight=1)
+
         self._display_money_frame.grid(row=0, column=1)
         self._display_money_frame.columnconfigure(0, weight=1)
         self._display_money_frame.rowconfigure(0, weight=1)
 
-        self._goals_frame.grid(row=11, column=1)
+        self._goals_frame.grid(row=1, column=1)
         self._goals_frame.columnconfigure(0, weight=1)
         self._goals_frame.rowconfigure(0, weight=1)
-
-
 
 
     def _frame_tab_month(self) -> None:
@@ -255,7 +257,7 @@ class View:
 
         self._check_goals.grid(row=0, column=0)
         self._add_goal.grid(row=0, column=1)
-        self._goals_txt.grid(row=1, column=0)
+        self._goals_txt.grid(row=1, column=0, columnspan=2)
         self._max_goal_amount.grid(row=2, column=0)
         self._max_spend_cat.grid(row=2, column=1)
 
@@ -287,7 +289,7 @@ class View:
 
             goals_str = goals_str + f'Spend no more than {goal[1]} on {goal[0]}\n'
         
-        goals_info = ttk.Label(self.popup, text=goals_str)
+        goals_info = ttk.Label(popup, text=goals_str)
 
         goals_info.grid(row=0, column=0)
         goals_info.columnconfigure(0, weight=1)
