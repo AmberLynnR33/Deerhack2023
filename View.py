@@ -50,23 +50,23 @@ class View:
         self._frame_money_out()
         self._frame_goals()
 
-        self._tab_month_frame.grid(row=0, column=0)
+        self._tab_month_frame.grid(row=0, column=0, padx=10)
         self._tab_month_frame.columnconfigure(0, weight=1)
         self._tab_month_frame.rowconfigure(0, weight=1)
 
-        self._money_in_frame.grid(row=1, column=0)
+        self._money_in_frame.grid(row=1, column=0, padx=18)
         self._money_in_frame.columnconfigure(0, weight=1)
         self._money_in_frame.rowconfigure(0, weight=1)
 
-        self._money_out_frame.grid(row=2, column=0)
+        self._money_out_frame.grid(row=2, column=0, padx=24)
         self._money_out_frame.columnconfigure(0, weight=1)
         self._money_out_frame.rowconfigure(0, weight=1)
 
-        self._display_money_frame.grid(row=0, column=1)
+        self._display_money_frame.grid(row=0, column=1, rowspan=2, padx=10)
         self._display_money_frame.columnconfigure(0, weight=1)
         self._display_money_frame.rowconfigure(0, weight=1)
 
-        self._goals_frame.grid(row=1, column=1)
+        self._goals_frame.grid(row=2, column=1, padx=10, pady=24)
         self._goals_frame.columnconfigure(0, weight=1)
         self._goals_frame.rowconfigure(0, weight=1)
 
@@ -85,8 +85,8 @@ class View:
         self._combobox_month_select['state'] = 'readonly'
 
         self._combobox_year_select = ttk.Combobox(self._tab_month_frame, values=year_vals)
-        self._combobox_month_select.set('Select Year')
-        self._combobox_month_select['state'] = 'readonly'
+        self._combobox_year_select.set('Select Year')
+        self._combobox_year_select['state'] = 'readonly'
 
         self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
                                                   justify='center',
@@ -128,7 +128,7 @@ class View:
         self._money_out_cat.columnconfigure(0, weight=1)
         self._money_out_cat.rowconfigure(0, weight=1)
 
-        self._money_out_entry.grid(row=0, column=0)
+        self._money_out_entry.grid(row=2, column=0)
         self._money_out_entry.columnconfigure(0, weight=1)
         self._money_out_entry.rowconfigure(0, weight=1)
 
@@ -195,31 +195,31 @@ class View:
 
         self._money_update()
 
-        self._money_earned.grid(row=0, column=0)
+        self._money_earned.grid(row=0, column=1, pady=5)
         self._money_earned.columnconfigure(0, weight=1)
         self._money_earned.rowconfigure(0, weight=1)
 
-        self._money_spent.grid(row=1, column=0)
+        self._money_spent.grid(row=1, column=1, pady=5)
         self._money_spent.columnconfigure(0, weight=1)
         self._money_spent.rowconfigure(0, weight=1)
 
-        self._money_spent_bills.grid(row=2, column=0)
+        self._money_spent_bills.grid(row=2, column=1, pady=5)
         self._money_spent_bills.columnconfigure(0, weight=1)
         self._money_spent_bills.rowconfigure(0, weight=1)
 
-        self._money_spent_sub.grid(row=3, column=0)
+        self._money_spent_sub.grid(row=3, column=1, pady=5)
         self._money_spent_sub.columnconfigure(0, weight=1)
         self._money_spent_sub.rowconfigure(0, weight=1)
 
-        self._money_spent_essn.grid(row=4, column=0)
+        self._money_spent_essn.grid(row=4, column=1, pady=5)
         self._money_spent_essn.columnconfigure(0, weight=1)
         self._money_spent_essn.rowconfigure(0, weight=1)
 
-        self._money_spent_edu.grid(row=5, column=0)
+        self._money_spent_edu.grid(row=5, column=1, pady=5)
         self._money_spent_edu.columnconfigure(0, weight=1)
         self._money_spent_edu.rowconfigure(0, weight=1)
 
-        self._money_spent_lux.grid(row=6, column=0)
+        self._money_spent_lux.grid(row=6, column=1, pady=5)
         self._money_spent_lux.columnconfigure(0, weight=1)
         self._money_spent_lux.rowconfigure(0, weight=1)
 
@@ -291,7 +291,7 @@ class View:
         
         goals_info = ttk.Label(popup, text=goals_str)
 
-        goals_info.grid(row=0, column=0)
+        goals_info.grid(row=0, column=0, padx=10, pady=10)
         goals_info.columnconfigure(0, weight=1)
         goals_info.rowconfigure(0, weight=1)
 
