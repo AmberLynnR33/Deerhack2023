@@ -5,7 +5,7 @@ from tkinter.filedialog import askopenfilename
 import openpyxl
 from typing import Optional
 
-from Model import Model
+#from Model import Model
 from CategoryCombobox import CategoryCombobox
 
 class View:
@@ -13,7 +13,7 @@ class View:
     The UI for the Financial Tracker
     """
 
-    model: Model
+    #model: Model
     base_screen: tk.Tk
 
     _main_frame: tk.Frame
@@ -31,7 +31,7 @@ class View:
     _goals_frame: tk.Frame
 
     def __init__(self):
-        self.model = None
+        #self.model = None
         self.base_screen = tk.Tk()
 
         self._create_main_frame()
@@ -86,9 +86,7 @@ class View:
         self._combobox_month_select['state'] = 'readonly'
 
         self._button_month_selection = ttk.Button(self._tab_month_frame, text="Get Month's Finances", 
-                                                  justify='center',
-                                                  command=self.model.page_exists(self._combobox_month_select.get(),
-                                                                                 self._combobox_year_select.get()))
+                                                  justify='center')
 
         self._button_month_selection.grid(row=0, column=0)
         self._button_month_selection.columnconfigure(0, weight=1)
@@ -150,12 +148,12 @@ class View:
 
 
     def money_input(self) -> None:
-        self.model.add_money_in(self._money_in_entry.get())
+        #self.model.add_money_in(self._money_in_entry.get())
         self._money_update()
 
 
     def money_output(self) -> None:
-        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
+        #self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
         self._money_update()
 
 
@@ -222,14 +220,14 @@ class View:
 
 
     def _money_update(self) -> None:
-        self._money_earned_entry.set('$' + str(self.model.total_amount_earned()))
-        self._money_spent_entry.set('$' + str(self.model.total_spent()))
+        self._money_earned_entry.set('$0')
+        self._money_spent_entry.set('$0')
 
-        self._money_spent_bills_e.set('$' + str(self.model.total_spent('bills')))
-        self._money_spent_sub_e.set('$' + str(self.model.total_spent('subscriptions')))
-        self._money_spent_essn_e.set('$' + str(self.model.total_spent('essentials')))
-        self._money_spent_edu_e.set('$' + str(self.model.total_spent('edu')))
-        self._money_spent_lux_e.set('$' + str(self.model.total_spent('luxury')))
+        self._money_spent_bills_e.set('$0')
+        self._money_spent_sub_e.set('$0')
+        self._money_spent_essn_e.set('$0')
+        self._money_spent_edu_e.set('$0')
+        self._money_spent_lux_e.set('$0')
         
 
     def _frame_goals(self) -> None:
@@ -239,8 +237,7 @@ class View:
                                        text="Check Month's Goals", justify='center', command=self.popup_goals)
         
         self._add_goal = ttk.Button(self._goals_frame, 
-                                       text="Add New Goal", justify='center', 
-                                       command=self.model.add_goal(self._max_goal_amount.get(), self._max_spend_cat.get()))
+                                       text="Add New Goal", justify='center')
         
         
         self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
@@ -278,7 +275,7 @@ class View:
         popup = tk.Toplevel(self.base_screen)
         popup.title('Goals Popup')
 
-        goals = self.model.get_goals()
+        goals = {'Luxury': 20}
         goals_str = 'My Goals\n'
 
         for goal in goals.items():
@@ -298,8 +295,8 @@ class View:
 
         #to create new files and load up existing ones
         self._file_menu = tk.Menu(self._main_menu)
-        self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
-        self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
+        self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker')
+        self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker')
 
 
     def _load_file_path() -> Optional[str]:
@@ -318,3 +315,7 @@ class View:
 
         self.base_screen['menu'] = self._main_menu
 
+
+if __name__ == '__main__':
+    v = View()
+    v.base_screen.mainloop()
