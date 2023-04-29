@@ -1,6 +1,8 @@
 import tkinter as tk
-import openpyxl
+from tkinter import ttk
 from tkinter.filedialog import askopenfilename
+import openpyxl
+from typing import Optional
 from Model import Model
 
 class View:
@@ -15,6 +17,11 @@ class View:
     _main_menu: tk.Menu
 
     _tab_out_frame: tk.Frame
+    _button_month_selection: ttk.Button
+    _combobox_month_select: ttk.Combobox
+    _combobox_year_select: ttk.Combobox
+
+
     _money_out_frame: tk.Frame
     _money_in_frame: tk.Frame
     _display_money_frame: tk.Frame
@@ -40,6 +47,25 @@ class View:
     def _frame_tab_month(self) -> None:
         self._tab_month_frame = tk.Frame(self._main_frame)
 
+        month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November',
+                      'December']
+        
+        year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
+
+        self._combobox_month_select = ttk.Combobox(self._tab_month_frame, values=month_vals)
+        self._combobox_month_select.set('Select Month')
+        self._combobox_month_select['state'] = 'readonly'
+
+        self._combobox_year_select = ttk.Combobox(self._tab_month_frame, values=year_vals)
+        self._combobox_month_select.set('Select Year')
+        self._combobox_month_select['state'] = 'readonly'
+
+        self._button_month_selection = ttk.Button(self._tab_month_frame, text="Get Month's Finances", 
+                                                  command=self.model.page_exists(self._combobox_month_select.get(),
+                                                                                 self._combobox_year_select.get()))
+
+
     def _frame_money_out(self) -> None:
         self._money_out_frame = tk.Frame(self._main_frame)
 
@@ -60,7 +86,7 @@ class View:
         self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
                                     
-    def _load_file_path() -> str:
+    def _load_file_path() -> Optional[str]:
         
         try:
             return askopenfilename()
