@@ -34,6 +34,7 @@ class View:
         self.model = None
         self.base_screen = tk.Tk()
         self.base_screen.option_add('*tearOff', tk.FALSE)
+        self._validate_money = self.base_screen.register(self._validate_money_input)
 
         self._create_main_frame()
         self._create_menu()
@@ -90,7 +91,7 @@ class View:
 
         self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
                                                   justify='center',
-                                                  command=self.model.page_exists(self._combobox_month_select.get(),
+                                                  command=(self._valid_month_year, self._combobox_month_select.get(),
                                                                                  self._combobox_year_select.get()))
 
         self._button_month_selection.grid(row=0, column=0, pady=2)
@@ -116,11 +117,12 @@ class View:
 
         self._money_out_entry = ttk.Entry(self._money_out_frame, 
                                           textvariable=self._money_out_str,
-                                          width=23)
+                                          width=23, validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
-                                           command=self.money_output)
+                                           command=self._money_output)
         
         self._submit_money_out.grid(row=0, column=0, pady=2)
         self._submit_money_out.columnconfigure(0, weight=1)
@@ -141,11 +143,12 @@ class View:
         self._money_in_str = tk.StringVar()
         self._money_in_entry = ttk.Entry(self._money_in_frame, 
                                          textvariable=self._money_in_entry,
-                                         width=23)
+                                         width=23, validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned", 
                                            justify='center',
-                                           command=self.money_input)
+                                           command=self._money_input)
 
         self._submit_money_in.grid(row=0, column=0, pady=2)
         self._submit_money_in.columnconfigure(0, weight=1)
@@ -232,18 +235,20 @@ class View:
         self._goals_frame = tk.Frame(self._main_frame)
 
         self._check_goals = tk.Button(self._goals_frame, 
-                                       text="Check Month's Goals", justify='center', command=self.popup_goals)
+                                       text="Check Month's Goals", justify='center', command=self._popup_goals)
         
         self._add_goal = tk.Button(self._goals_frame, 
                                        text="Add New Goal", justify='center', 
-                                       command=self.model.add_goal(self._max_goal_amount.get(), self._max_spend_cat.get()))
+                                       command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
         
         
         self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
 
         self._max_goal_amount_e = tk.StringVar()
 
-        self._max_goal_amount = ttk.Entry(self._goals_frame, textvariable=self._max_goal_amount_e)
+        self._max_goal_amount = ttk.Entry(self._goals_frame, textvariable=self._max_goal_amount_e,
+                                          validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
@@ -270,7 +275,7 @@ class View:
         self._max_spend_cat.rowconfigure(0, weight=1)
 
 
-    def popup_goals(self) -> None:
+    def _popup_goals(self) -> None:
         popup = tk.Toplevel(self.base_screen)
         popup.title('Goals')
 
@@ -291,15 +296,6 @@ class View:
 
     def _create_menu(self) -> None:
         self._main_menu = tk.Menu(self.base_screen)
-
-        #to create new files and load up existing ones
-        self._file_menu = tk.Menu(self._main_menu)
-        self._save_menu = tk.Menu(self._main_menu)
-        self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
-        self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
-
-
-        self._main_menu = tk.Menu(self.base_screen)
         self.base_screen['menu'] = self._main_menu
 
         #to create new files and load up existing ones
@@ -308,7 +304,7 @@ class View:
         self._main_menu.add_cascade(menu=self._file_menu, label='File')
         self._main_menu.add_cascade(menu=self._save_menu, label='Save', command=self.model.save_file)
 
-        self._file_menu.add_command(label="Open Existing File", command=self.model.open_file(self._load_file_path))
+        self._file_menu.add_command(label="Open Existing File", command=(self.model.open_file, self._load_file_path))
         self._file_menu.add_command(label="Open New File", command=self.model.create_file)
 
 
@@ -328,15 +324,43 @@ class View:
 
     # VALID INPUT METHODS
 
-    def money_input(self) -> None:
+    def _money_input(self) -> None:
         
         self.model.add_money_in(self._money_in_entry.get())
         self._money_update()
 
-
-    def money_output(self) -> None:
+    def _money_output(self) -> None:
         self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
         self._money_update()
 
-    
+    def _valid_month_year(self, month: str, year: str) -> None:
+        if month in self.month_vals and year in self.year_vals:
+            self.model.page_exists(month, year)
 
+    def _validate_money_category(self, cat: str, money: float) -> bool:
+        valid_cat = ['Bills', 'Subscriptions', 'Essentials', 'Education / Work', 'Luxuries']
+        if cat in valid_cat:
+            return True
+        return False
+
+    def _valid_goal_input(self, cat: str, money:str) -> None:
+        if self._validate_money_category(cat, money):
+            self.model.add_goal(float(money), cat)
+
+
+    def _validate_money_input(self, text: str) -> bool:
+        try:
+            float(text)
+        except ValueError:
+            return False
+        else:
+            str_rep = str(text)
+            at_decimal = False
+            decimal_places = 0
+            for char in str_rep:
+                if at_decimal:
+                    decimal_places += 1
+
+                if char == '.':
+                    at_decimal = True
+            return decimal_places <= 2

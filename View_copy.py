@@ -34,6 +34,7 @@ class View:
         #self.model = None
         self.base_screen = tk.Tk()
         self.base_screen.option_add('*tearOff', tk.FALSE)
+        self._validate_money = self.base_screen.register(self._validate_money_input)
 
         self._create_main_frame()
         self._create_menu()
@@ -115,7 +116,9 @@ class View:
 
         self._money_out_entry = ttk.Entry(self._money_out_frame, 
                                           textvariable=self._money_out_str,
-                                          width=23)
+                                          width=23,
+                                          validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
@@ -138,7 +141,9 @@ class View:
         self._money_in_frame = tk.Frame(self._main_frame)
 
         self._money_in_str = tk.StringVar()
-        self._money_in_entry = ttk.Entry(self._money_in_frame, textvariable=self._money_in_str)
+        self._money_in_entry = ttk.Entry(self._money_in_frame, textvariable=self._money_in_str,
+                                         validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned",
                                           justify='center', command=self.money_input)
@@ -249,7 +254,9 @@ class View:
 
         self._max_goal_amount_e = tk.StringVar()
 
-        self._max_goal_amount = ttk.Entry(self._goals_frame, textvariable=self._max_goal_amount_e)
+        self._max_goal_amount = ttk.Entry(self._goals_frame, textvariable=self._max_goal_amount_e,
+                                          validate="key",
+                                          validatecommand=(self._validate_money, '%P'))
 
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
@@ -309,7 +316,7 @@ class View:
         self._file_menu.add_command(label="Open New File")
 
 
-    def _load_file_path() -> Optional[str]:
+    def _load_file_path(self) -> Optional[str]:
         
         try:
             return askopenfilename()
@@ -322,6 +329,23 @@ class View:
         self._main_frame.columnconfigure(0, weight=1)
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
+
+    def _validate_money_input(self, text: str) -> bool:
+        try:
+            float(text)
+        except ValueError:
+            return False
+        else:
+            str_rep = str(text)
+            at_decimal = False
+            decimal_places = 0
+            for char in str_rep:
+                if at_decimal:
+                    decimal_places += 1
+
+                if char == '.':
+                    at_decimal = True
+            return decimal_places <= 2
 
 
 if __name__ == '__main__':
