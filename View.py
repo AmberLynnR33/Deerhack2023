@@ -41,9 +41,9 @@ class View:
 
         # Each subframe
         self._frame_tab_month()
+        self._frame_display_money()
         self._frame_money_in()
         self._frame_money_out()
-        self._frame_display_money()
         self._frame_goals()
 
     def _frame_tab_month(self) -> None:
@@ -67,7 +67,6 @@ class View:
                                                   justify='center',
                                                   command=self.model.page_exists(self._combobox_month_select.get(),
                                                                                  self._combobox_year_select.get()))
-        
 
         self._button_month_selection.grid(row=0, column=0)
         self._button_month_selection.columnconfigure(0, weight=1)
@@ -93,8 +92,7 @@ class View:
 
         self._submit_money_out = ttk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
-                                           command=self.model.add_money_out(self._money_out_entry.get(),
-                                                                            self._money_out_cat.get()))
+                                           command=self.money_output)
         
         self._submit_money_out.grid(row=0, column=0)
         self._submit_money_out.columnconfigure(0, weight=1)
@@ -116,7 +114,7 @@ class View:
 
         self._submit_money_in = ttk.Button(self._money_in_frame, text="Add Money Earned", 
                                            justify='center',
-                                           command=self.model.add_money_in(self._money_in_entry.get))
+                                           command=self.money_input)
 
         self._submit_money_in.grid(row=0, column=0)
         self._submit_money_in.columnconfigure(0, weight=1)
@@ -126,8 +124,89 @@ class View:
         self._money_in_entry.columnconfigure(0, weight=1)
         self._money_in_entry.rowconfigure(0, weight=1)
 
+
+    def money_input(self) -> None:
+        self.model.add_money_in(self._money_in_entry.get())
+        self._money_update()
+
+
+    def money_output(self) -> None:
+        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
+        self._money_update()
+
+
     def _frame_display_money(self) -> None:
         self._display_money_frame = tk.Frame(self._main_frame)
+
+        self._money_earned_entry = tk.StringVar()
+        self._money_earned = ttk.Label(self._display_money_frame)
+        self._money_earned['textvariable'] = self._money_earned_entry
+
+        self._money_spent_entry = tk.StringVar()
+        self._money_spent = ttk.Label(self._display_money_frame)
+        self._money_spent['textvariable'] = self._money_spent_entry
+
+        self._money_spent_bills_e = tk.StringVar()
+        self._money_spent_bills = ttk.Label(self._display_money_frame)
+        self._money_spent_bills['textvariable'] = self._money_spent_bills_e
+
+        self._money_spent_sub_e = tk.StringVar()
+        self._money_spent_sub = ttk.Label(self._display_money_frame)
+        self._money_spent_sub['textvariable'] = self._money_spent_sub_e
+
+        self._money_spent_essn_e = tk.StringVar()
+        self._money_spent_essn = ttk.Label(self._display_money_frame)
+        self._money_spent_essn['textvariable'] = self._money_spent_essn_e
+
+        self._money_spent_edu_e = tk.StringVar()
+        self._money_spent_edu = ttk.Label(self._display_money_frame)
+        self._money_spent_edu['textvariable'] = self._money_spent_edu_e
+
+        self._money_spent_lux_e = tk.StringVar()
+        self._money_spent_lux = ttk.Label(self._display_money_frame)
+        self._money_spent_lux['textvariable'] = self._money_spent_lux_e
+
+        self._money_update()
+
+        self._money_earned.grid(row=0, column=0)
+        self._money_earned.columnconfigure(0, weight=1)
+        self._money_earned.rowconfigure(0, weight=1)
+
+        self._money_spent.grid(row=1, column=0)
+        self._money_spent.columnconfigure(0, weight=1)
+        self._money_spent.rowconfigure(0, weight=1)
+
+        self._money_spent_bills.grid(row=2, column=0)
+        self._money_spent_bills.columnconfigure(0, weight=1)
+        self._money_spent_bills.rowconfigure(0, weight=1)
+
+        self._money_spent_sub.grid(row=3, column=0)
+        self._money_spent_sub.columnconfigure(0, weight=1)
+        self._money_spent_sub.rowconfigure(0, weight=1)
+
+        self._money_spent_essn.grid(row=4, column=0)
+        self._money_spent_essn.columnconfigure(0, weight=1)
+        self._money_spent_essn.rowconfigure(0, weight=1)
+
+        self._money_spent_edu.grid(row=5, column=0)
+        self._money_spent_edu.columnconfigure(0, weight=1)
+        self._money_spent_edu.rowconfigure(0, weight=1)
+
+        self._money_spent_lux.grid(row=6, column=0)
+        self._money_spent_lux.columnconfigure(0, weight=1)
+        self._money_spent_lux.rowconfigure(0, weight=1)
+
+
+    def _money_update(self) -> None:
+        self._money_earned_entry.set('$' + str(self.model.total_amount_earned()))
+        self._money_spent_entry.set('$' + str(self.model.total_spent()))
+
+        self._money_spent_bills_e.set('$' + str(self.model.total_spent('bills')))
+        self._money_spent_sub_e.set('$' + str(self.model.total_spent('subscriptions')))
+        self._money_spent_essn_e.set('$' + str(self.model.total_spent('essentials')))
+        self._money_spent_edu_e.set('$' + str(self.model.total_spent('edu')))
+        self._money_spent_lux_e.set('$' + str(self.model.total_spent('luxury')))
+        
 
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
