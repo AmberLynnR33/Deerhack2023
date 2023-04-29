@@ -1,12 +1,16 @@
 import tkinter as tk
 import openpyxl
 from tkinter.filedialog import askopenfilename
+from Model import Model
 
 class View:
     """
     The UI for the Financial Tracker
     """
+
+    model: Model
     base_screen: tk.Tk
+
     _main_frame: tk.Frame
     _main_menu: tk.Menu
 
@@ -51,6 +55,18 @@ class View:
     def _create_menu(self) -> None:
         self._main_menu = tk.Menu(self.base_screen)
 
+        #to create new files and load up existing ones
+        self._file_menu = tk.Menu(self._main_menu)
+        self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
+        self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
+                                    
+    def _load_file_path() -> str:
+        
+        try:
+            return askopenfilename()
+        except FileNotFoundError:
+            return None
+        
 
     def _configure_main_screen(self) -> None:
         self._main_frame.grid(row=0, col=0, sticky='n s e w')
@@ -59,3 +75,4 @@ class View:
         self.base_screen.title("Financial Tracker")
 
         self.base_screen['menu'] = self._main_menu
+
