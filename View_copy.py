@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+from PIL import ImageTk, Image
 
 from tkinter.filedialog import askopenfilename
-from PIL import ImageTk, Image
+import openpyxl
 from typing import Optional
 
-from Model import Model
+#from Model import Model
 from CategoryCombobox import CategoryCombobox
 
 class View:
@@ -13,7 +14,7 @@ class View:
     The UI for the Financial Tracker
     """
 
-    model: Model
+    #model: Model
     base_screen: tk.Tk
 
     _main_frame: tk.Frame
@@ -31,7 +32,7 @@ class View:
     _goals_frame: tk.Frame
 
     def __init__(self):
-        self.model = None
+        #self.model = None
         self.base_screen = tk.Tk()
         self.base_screen.option_add('*tearOff', tk.FALSE)
         self._validate_money = self.base_screen.register(self._validate_money_input)
@@ -55,11 +56,11 @@ class View:
         self._tab_month_frame.columnconfigure(0, weight=1)
         self._tab_month_frame.rowconfigure(0, weight=1)
 
-        self._money_in_frame.grid(row=1, column=0, padx=18)
+        self._money_in_frame.grid(row=1, column=0, padx=10, pady=18)
         self._money_in_frame.columnconfigure(0, weight=1)
         self._money_in_frame.rowconfigure(0, weight=1)
 
-        self._money_out_frame.grid(row=2, column=0, padx=24)
+        self._money_out_frame.grid(row=2, column=0, padx=10, pady=24)
         self._money_out_frame.columnconfigure(0, weight=1)
         self._money_out_frame.rowconfigure(0, weight=1)
 
@@ -70,6 +71,7 @@ class View:
         self._goals_frame.grid(row=2, column=1, padx=10, pady=24)
         self._goals_frame.columnconfigure(0, weight=1)
         self._goals_frame.rowconfigure(0, weight=1)
+
 
 
     def _frame_tab_month(self) -> None:
@@ -90,9 +92,7 @@ class View:
         self._combobox_year_select['state'] = 'readonly'
 
         self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
-                                                  justify='center',
-                                                  command=(self._valid_month_year, self._combobox_month_select.get(),
-                                                                                 self._combobox_year_select.get()))
+                                                  justify='center')
 
         self._button_month_selection.grid(row=0, column=0, pady=2)
         self._button_month_selection.columnconfigure(0, weight=1)
@@ -117,12 +117,13 @@ class View:
 
         self._money_out_entry = ttk.Entry(self._money_out_frame, 
                                           textvariable=self._money_out_str,
-                                          width=23, validate="key",
+                                          width=23,
+                                          validate="key",
                                           validatecommand=(self._validate_money, '%P'))
 
         self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
-                                           command=self._money_output)
+                                           command=self.money_output)
         
         self._submit_money_out.grid(row=0, column=0, pady=2)
         self._submit_money_out.columnconfigure(0, weight=1)
@@ -141,14 +142,12 @@ class View:
         self._money_in_frame = tk.Frame(self._main_frame)
 
         self._money_in_str = tk.StringVar()
-        self._money_in_entry = ttk.Entry(self._money_in_frame, 
-                                         textvariable=self._money_in_entry,
-                                         width=23, validate="key",
+        self._money_in_entry = ttk.Entry(self._money_in_frame, textvariable=self._money_in_str,
+                                         validate="key",
                                           validatecommand=(self._validate_money, '%P'))
 
-        self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned", 
-                                           justify='center',
-                                           command=self._money_input)
+        self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned",
+                                          justify='center', command=self.money_input)
 
         self._submit_money_in.grid(row=0, column=0, pady=2)
         self._submit_money_in.columnconfigure(0, weight=1)
@@ -157,6 +156,16 @@ class View:
         self._money_in_entry.grid(row=1, column=0, pady=2)
         self._money_in_entry.columnconfigure(0, weight=1)
         self._money_in_entry.rowconfigure(0, weight=1)
+
+
+    def money_input(self) -> None:
+        #self.model.add_money_in(self._money_in_entry.get())
+        self._money_update()
+
+
+    def money_output(self) -> None:
+        #self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
+        self._money_update()
 
 
     def _frame_display_money(self) -> None:
@@ -228,25 +237,24 @@ class View:
 
 
     def _money_update(self) -> None:
-        self._money_earned_entry.set('Total Earned: $' + str(self.model.total_amount_earned()))
-        self._money_spent_entry.set('Total Spent $' + str(self.model.total_spent()))
+        self._money_earned_entry.set('Total Eaned: $10319.80')
+        self._money_spent_entry.set('Total Spent: $0')
 
-        self._money_spent_bills_e.set('Bills: $' + str(self.model.total_spent('bills')))
-        self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('subscriptions')))
-        self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('essentials')))
-        self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('edu')))
-        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('luxury')))
+        self._money_spent_bills_e.set('$0')
+        self._money_spent_sub_e.set('Subscriptions: $0')
+        self._money_spent_essn_e.set('$0')
+        self._money_spent_edu_e.set('Edu / Work $0')
+        self._money_spent_lux_e.set('$0')
         
 
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
 
         self._check_goals = tk.Button(self._goals_frame, 
-                                       text="Check Month's Goals", justify='center', command=self._popup_goals)
+                                       text="Check Month's Goals", justify='center', command=self.popup_goals)
         
         self._add_goal = tk.Button(self._goals_frame, 
-                                       text="Add New Goal", justify='center', 
-                                       command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
+                                       text="Add New Goal", justify='center')
         
         
         self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
@@ -263,8 +271,8 @@ class View:
         self._check_goals.grid(row=0, column=0, pady=2)
         self._add_goal.grid(row=0, column=1, pady=2)
         self._goals_txt.grid(row=1, column=0, columnspan=2, pady=2)
-        self._max_goal_amount.grid(row=2, column=0, padx=2, pady=2)
-        self._max_spend_cat.grid(row=2, column=1, pady=2)
+        self._max_goal_amount.grid(row=2, column=0, pady=2, padx=2)
+        self._max_spend_cat.grid(row=2, column=1, pady=2, padx=2)
 
         self._check_goals.columnconfigure(0, weight=1)
         self._check_goals.rowconfigure(0, weight=1)
@@ -282,11 +290,11 @@ class View:
         self._max_spend_cat.rowconfigure(0, weight=1)
 
 
-    def _popup_goals(self) -> None:
+    def popup_goals(self) -> None:
         popup = tk.Toplevel(self.base_screen)
         popup.title('Goals')
 
-        goals = self.model.get_goals()
+        goals = {'Luxury': 20}
         goals_str = 'My Goals'
 
         for goal in goals.items():
@@ -309,57 +317,26 @@ class View:
         self._file_menu = tk.Menu(self._main_menu)
         self._save_menu = tk.Menu(self._main_menu)
         self._main_menu.add_cascade(menu=self._file_menu, label='File')
-        self._main_menu.add_cascade(menu=self._save_menu, label='Save', command=self.model.save_file)
+        self._main_menu.add_cascade(menu=self._save_menu, label='Save')
 
-        self._file_menu.add_command(label="Open Existing File", command=(self.model.open_file, self._load_file_path))
-        self._file_menu.add_command(label="Open New File", command=self.model.create_file)
+        self._file_menu.add_command(label="Open Existing File")
+        self._file_menu.add_command(label="Open New File")
 
 
-    def _load_file_path() -> Optional[str]:
+    def _load_file_path(self) -> Optional[str]:
         
         try:
             return askopenfilename()
         except FileNotFoundError:
             return None
         
-    
+
     def _configure_main_screen(self) -> None:
         self._main_frame.grid(row=0, column=0, sticky='n s e w')
         self._main_frame.columnconfigure(0, weight=1)
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
-
-
-    # VALID INPUT METHODS
-
-
-    def _money_input(self) -> None:
-        
-        self.model.add_money_in(self._money_in_entry.get())
-        self._money_update()
-
-
-    def _money_output(self) -> None:
-        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
-        self._money_update()
-
-
-    def _valid_month_year(self, month: str, year: str) -> None:
-        if month in self.month_vals and year in self.year_vals:
-            self.model.page_exists(month, year)
-
-
-    def _validate_money_category(self, cat: str, money: float) -> bool:
-        valid_cat = ['Bills', 'Subscriptions', 'Essentials', 'Education / Work', 'Luxuries']
-        if cat in valid_cat:
-            return True
-        return False
-
-
-    def _valid_goal_input(self, cat: str, money:str) -> None:
-        if self._validate_money_category(cat, money):
-            self.model.add_goal(float(money), cat)
-
+        self.base_screen.resizable(False, False)
 
     def _validate_money_input(self, text: str) -> bool:
         try:
@@ -377,3 +354,8 @@ class View:
                 if char == '.':
                     at_decimal = True
             return decimal_places <= 2
+
+
+if __name__ == '__main__':
+    v = View()
+    v.base_screen.mainloop()
