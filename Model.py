@@ -1,4 +1,5 @@
 from openpyxl import Workbook, load_workbook, worksheet
+import View
 
 
 class Model:
@@ -16,7 +17,7 @@ class Model:
     cat: dict
     amount_made: float
     goals: dict
-    # view: View
+    view: View()
 
     def __init__(self) -> None:
         """
