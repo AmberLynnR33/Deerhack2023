@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+
 from tkinter.filedialog import askopenfilename
 import openpyxl
 from typing import Optional
@@ -216,6 +217,25 @@ class View:
         self._goals_frame = tk.Frame(self._main_frame)
 
 
+    def popup_goals(self) -> None:
+        popup = tk.Toplevel(self.base_screen)
+        popup.title('Goals Popup')
+
+        goals = self.model.get_goals()
+        goals_str = 'My Goals\n'
+
+        for goal in goals.items():
+            goal = tuple(goal)
+
+            goals_str = goals_str + f'Spend no more than {goal[1]} on {goal[0]}\n'
+        
+        goals_info = ttk.Label(self.popup, text=goals_str)
+
+        goals_info.grid(row=0, column=0)
+        goals_info.columnconfigure(0, weight=1)
+        goals_info.rowconfigure(0, weight=1)
+
+
     def _create_menu(self) -> None:
         self._main_menu = tk.Menu(self.base_screen)
 
@@ -223,8 +243,8 @@ class View:
         self._file_menu = tk.Menu(self._main_menu)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
-             
-                                    
+
+
     def _load_file_path() -> Optional[str]:
         
         try:
