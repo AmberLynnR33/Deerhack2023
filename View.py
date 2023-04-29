@@ -62,9 +62,22 @@ class View:
         self._combobox_month_select['state'] = 'readonly'
 
         self._button_month_selection = ttk.Button(self._tab_month_frame, text="Get Month's Finances", 
+                                                  justify='center',
                                                   command=self.model.page_exists(self._combobox_month_select.get(),
                                                                                  self._combobox_year_select.get()))
+        
 
+        self._button_month_selection.grid(row=0, column=0)
+        self._button_month_selection.columnconfigure(0, weight=1)
+        self._button_month_selection.rowconfigure(0, weight=1)
+
+        self._combobox_month_select.grid(row=1, column=0)
+        self._combobox_month_select.columnconfigure(0, weight=1)
+        self._combobox_month_select.rowconfigure(0, weight=1)
+
+        self._combobox_year_select.grid(row=2, column=0)
+        self._combobox_year_select.columnconfigure(0, weight=1)
+        self._combobox_year_select.rowconfigure(0, weight=1)
 
     def _frame_money_out(self) -> None:
         self._money_out_frame = tk.Frame(self._main_frame)
