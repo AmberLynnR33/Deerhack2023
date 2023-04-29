@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 
 from tkinter.filedialog import askopenfilename
-import openpyxl
 from typing import Optional
 
 from Model import Model
