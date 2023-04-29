@@ -3,7 +3,9 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 import openpyxl
 from typing import Optional
+
 from Model import Model
+from CategoryCombobox import CategoryCombobox
 
 class View:
     """
@@ -82,6 +84,29 @@ class View:
     def _frame_money_out(self) -> None:
         self._money_out_frame = tk.Frame(self._main_frame)
 
+        self._money_out_cat = CategoryCombobox(self._money_out_frame)
+        self._money_out_cat.configure_combobox()
+
+        self._money_out_str = tk.StringVar()
+
+        self._money_out_entry = ttk.Entry(self._money_out_frame, self._money_out_entry)
+
+        self._submit_money_out = ttk.Button(self._money_out_frame, text="Add Money Spent", 
+                                           justify='center',
+                                           command=self.model.add_money_out(self._money_out_entry.get(),
+                                                                            self._money_out_cat.get()))
+        
+        self._submit_money_out.grid(row=0, column=0)
+        self._submit_money_out.columnconfigure(0, weight=1)
+        self._submit_money_out.rowconfigure(0, weight=1)
+
+        self._money_out_cat.grid(row=1, column=0)
+        self._money_out_cat.columnconfigure(0, weight=1)
+        self._money_out_cat.rowconfigure(0, weight=1)
+
+        self._money_out_entry.grid(row=0, column=0)
+        self._money_out_entry.columnconfigure(0, weight=1)
+        self._money_out_entry.rowconfigure(0, weight=1)
 
     def _frame_money_in(self) -> None:
         self._money_in_frame = tk.Frame(self._main_frame)
@@ -89,9 +114,9 @@ class View:
         self._money_in_str = tk.StringVar()
         self._money_in_entry = ttk.Entry(self._money_in_frame, self._money_in_entry)
 
-        self._submit_money_in = ttk.Button(self._tab_month_frame, text="Add Money Earned", 
+        self._submit_money_in = ttk.Button(self._money_in_frame, text="Add Money Earned", 
                                            justify='center',
-                                           command=self.model.page_exists(self.model.add_money_in(self._money_in_entry.get)))
+                                           command=self.model.add_money_in(self._money_in_entry.get))
 
         self._submit_money_in.grid(row=0, column=0)
         self._submit_money_in.columnconfigure(0, weight=1)
