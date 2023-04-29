@@ -155,17 +155,6 @@ class View:
         self._money_in_entry.columnconfigure(0, weight=1)
         self._money_in_entry.rowconfigure(0, weight=1)
 
-
-    def money_input(self) -> None:
-        self.model.add_money_in(self._money_in_entry.get())
-        self._money_update()
-
-
-    def money_output(self) -> None:
-        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
-        self._money_update()
-
-
     def _frame_display_money(self) -> None:
         self._display_money_frame = tk.Frame(self._main_frame)
 
@@ -336,4 +325,18 @@ class View:
         self._main_frame.columnconfigure(0, weight=1)
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
+
+    # VALID INPUT METHODS
+
+    def money_input(self) -> None:
+        
+        self.model.add_money_in(self._money_in_entry.get())
+        self._money_update()
+
+
+    def money_output(self) -> None:
+        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
+        self._money_update()
+
+    
 
