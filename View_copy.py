@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from PIL import ImageTk, Image
 
 from tkinter.filedialog import askopenfilename
 import openpyxl
@@ -200,6 +201,12 @@ class View:
 
         self._money_update()
 
+        self.image_file = Image.open("Logo_Expenses.png")
+        self.image_file = self.image_file.resize((150, 250), Image.LANCZOS)
+        self.image_file = ImageTk.PhotoImage(self.image_file)
+        logo_expenses = tk.Label(self._display_money_frame, image=self.image_file)
+        logo_expenses.grid(row=0, column=0, rowspan=7)
+
         self._money_earned.grid(row=0, column=1, pady=5)
         self._money_earned.columnconfigure(0, weight=1)
         self._money_earned.rowconfigure(0, weight=1)
@@ -230,13 +237,13 @@ class View:
 
 
     def _money_update(self) -> None:
-        self._money_earned_entry.set('$0')
-        self._money_spent_entry.set('$0')
+        self._money_earned_entry.set('Total Eaned: $10319.80')
+        self._money_spent_entry.set('Total Spent: $0')
 
         self._money_spent_bills_e.set('$0')
-        self._money_spent_sub_e.set('$0')
+        self._money_spent_sub_e.set('Subscriptions: $0')
         self._money_spent_essn_e.set('$0')
-        self._money_spent_edu_e.set('$0')
+        self._money_spent_edu_e.set('Edu / Work $0')
         self._money_spent_lux_e.set('$0')
         
 
@@ -329,6 +336,7 @@ class View:
         self._main_frame.columnconfigure(0, weight=1)
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
+        self.base_screen.resizable(False, False)
 
     def _validate_money_input(self, text: str) -> bool:
         try:

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from tkinter.filedialog import askopenfilename
+from PIL import ImageTk, Image
 from typing import Optional
 
 from Model import Model
@@ -157,6 +158,7 @@ class View:
         self._money_in_entry.columnconfigure(0, weight=1)
         self._money_in_entry.rowconfigure(0, weight=1)
 
+
     def _frame_display_money(self) -> None:
         self._display_money_frame = tk.Frame(self._main_frame)
 
@@ -190,6 +192,12 @@ class View:
 
         self._money_update()
 
+        self.image_file = Image.open("Logo_Expenses.png")
+        self.image_file = self.image_file.resize((150, 250), Image.LANCZOS)
+        self.image_file = ImageTk.PhotoImage(self.image_file)
+        logo_expenses = tk.Label(self._display_money_frame, image=self.image_file)
+        logo_expenses.grid(row=0, column=0, rowspan=7)
+
         self._money_earned.grid(row=0, column=1, pady=5)
         self._money_earned.columnconfigure(0, weight=1)
         self._money_earned.rowconfigure(0, weight=1)
@@ -220,14 +228,14 @@ class View:
 
 
     def _money_update(self) -> None:
-        self._money_earned_entry.set('$' + str(self.model.total_amount_earned()))
-        self._money_spent_entry.set('$' + str(self.model.total_spent()))
+        self._money_earned_entry.set('Total Earned: $' + str(self.model.total_amount_earned()))
+        self._money_spent_entry.set('Total Spent $' + str(self.model.total_spent()))
 
-        self._money_spent_bills_e.set('$' + str(self.model.total_spent('bills')))
-        self._money_spent_sub_e.set('$' + str(self.model.total_spent('subscriptions')))
-        self._money_spent_essn_e.set('$' + str(self.model.total_spent('essentials')))
-        self._money_spent_edu_e.set('$' + str(self.model.total_spent('edu')))
-        self._money_spent_lux_e.set('$' + str(self.model.total_spent('luxury')))
+        self._money_spent_bills_e.set('Bills: $' + str(self.model.total_spent('bills')))
+        self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('subscriptions')))
+        self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('essentials')))
+        self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('edu')))
+        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('luxury')))
         
 
     def _frame_goals(self) -> None:
@@ -321,26 +329,32 @@ class View:
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
 
+
     # VALID INPUT METHODS
+
 
     def _money_input(self) -> None:
         
         self.model.add_money_in(self._money_in_entry.get())
         self._money_update()
 
+
     def _money_output(self) -> None:
         self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
         self._money_update()
 
+
     def _valid_month_year(self, month: str, year: str) -> None:
         if month in self.month_vals and year in self.year_vals:
             self.model.page_exists(month, year)
+
 
     def _validate_money_category(self, cat: str, money: float) -> bool:
         valid_cat = ['Bills', 'Subscriptions', 'Essentials', 'Education / Work', 'Luxuries']
         if cat in valid_cat:
             return True
         return False
+
 
     def _valid_goal_input(self, cat: str, money:str) -> None:
         if self._validate_money_category(cat, money):
