@@ -29,10 +29,10 @@ class View:
 
     def __init__(self):
         self.base_screen = tk.Tk()
-        self._configure_main_screen
 
         self._create_main_frame()
         self._create_menu()
+        self._configure_main_screen()
 
     def _create_main_frame(self) -> tk.Frame:
         self._main_frame = tk.Frame(self.base_screen)

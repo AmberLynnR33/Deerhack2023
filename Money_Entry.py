@@ -1,4 +1,6 @@
 from tkinter import ttk
+import tkinter as tk
+import re
 
 class Money_Entry(ttk.Entry):
     """
@@ -6,23 +8,44 @@ class Money_Entry(ttk.Entry):
     Or a cost
     """
 
-    def valid_amount(self, new_char: str) -> bool:
-        cur_val = self.get()
+def valid_amount() -> bool:
+        cur_val = a.get()
 
-        contains_decimal = False
+        valid_decimal = True
+        valid_char = True
         num_after_decimal = 0
+        num_decimals = 0
 
         for char in cur_val:
-            if contains_decimal == True:
+            if not (char in '1234567890.'):
+                 valid_char = False
+                 break
+
+            if num_decimals > 0:
                 num_after_decimal += 1
 
             if char in '.':
-                contains_decimal = True
+                 num_decimals += 1
+                 if num_decimals > 1:
+                      valid_decimal = False
+                      break
 
-        valid_char = new_char in '123456789.'
-        valid_decimal = True
+        return valid_char and valid_decimal and (num_after_decimal < 3)
+    
 
-        if new_char in '.' and contains_decimal:
-            valid_decimal = False
+if __name__ == '__main__':
+    screen = tk.Tk()
+    main_frame = tk.Frame(screen)
 
-        return valid_char and valid_decimal and num_after_decimal < 3
+    main_frame.grid(row=0, column=0, sticky='n s e w')
+    main_frame.columnconfigure(0, weight=1)
+    main_frame.rowconfigure(0, weight=1)
+
+    b = tk.StringVar()
+
+    a = Money_Entry(main_frame, textvariable=b, validate='all', validatecommand=valid_amount)
+
+    
+    a.grid(row=0, column=0)
+
+    screen.mainloop()
