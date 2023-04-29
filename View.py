@@ -216,6 +216,44 @@ class View:
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
 
+        self._check_goals = ttk.Button(self._goals_frame, 
+                                       text="Check Month's Goals", justify='center', command=self.popup_goals)
+        
+        self._add_goal = ttk.Button(self._goals_frame, 
+                                       text="Add New Goal", justify='center', 
+                                       command=self.model.add_goal(self._max_goal_amount.get(), self._max_spend_cat.get()))
+        
+        
+        self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
+
+        self._max_goal_amount_e = tk.StringVar()
+
+        self._max_goal_amount = ttk.Entry(self._goals_frame, self._max_goal_amount_e)
+
+        self._max_spend_cat = CategoryCombobox(self._goals_frame)
+        self._max_spend_cat.configure_combobox()
+
+        self._check_goals.grid(row=0, column=0)
+        self._add_goal.grid(row=0, column=1)
+        self._goals_txt.grid(row=1, column=0)
+        self._max_goal_amount.grid(row=2, column=0)
+        self._max_spend_cat.grid(row=2, col=1)
+
+        self._check_goals.columnconfigure(0, weight=1)
+        self._check_goals.rowconfigure(0, weight=1)
+        
+        self._goals_txt.columnconfigure(0, weight=1)
+        self._goals_txt.rowconfigure(0, weight=1)
+
+        self._add_goal.columnconfigure(0, weight=1)
+        self._add_goal.rowconfigure(0, weight=1)
+
+        self._max_goal_amount.columnconfigure(0, weight=1)
+        self._max_goal_amount.rowconfigure(0, weight=1)
+
+        self._max_spend_cat.columnconfigure(0, weight=1)
+        self._max_spend_cat.rowconfigure(0, weight=1)
+
 
     def popup_goals(self) -> None:
         popup = tk.Toplevel(self.base_screen)
