@@ -36,6 +36,7 @@ class View:
         self._create_menu()
         self._configure_main_screen()
 
+
     def _create_main_frame(self) -> tk.Frame:
         self._main_frame = tk.Frame(self.base_screen)
 
@@ -45,6 +46,7 @@ class View:
         self._frame_money_in()
         self._frame_money_out()
         self._frame_goals()
+
 
     def _frame_tab_month(self) -> None:
         self._tab_month_frame = tk.Frame(self._main_frame)
@@ -80,6 +82,7 @@ class View:
         self._combobox_year_select.columnconfigure(0, weight=1)
         self._combobox_year_select.rowconfigure(0, weight=1)
 
+
     def _frame_money_out(self) -> None:
         self._money_out_frame = tk.Frame(self._main_frame)
 
@@ -105,6 +108,7 @@ class View:
         self._money_out_entry.grid(row=0, column=0)
         self._money_out_entry.columnconfigure(0, weight=1)
         self._money_out_entry.rowconfigure(0, weight=1)
+
 
     def _frame_money_in(self) -> None:
         self._money_in_frame = tk.Frame(self._main_frame)
@@ -211,6 +215,7 @@ class View:
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
 
+
     def _create_menu(self) -> None:
         self._main_menu = tk.Menu(self.base_screen)
 
@@ -218,6 +223,7 @@ class View:
         self._file_menu = tk.Menu(self._main_menu)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
+             
                                     
     def _load_file_path() -> Optional[str]:
         
