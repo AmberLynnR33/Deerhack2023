@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     b = tk.StringVar()
 
-    a = Money_Entry(main_frame, textvariable=b, validate='all', validatecommand=valid_amount)
+    a = tk.Entry(main_frame, textvariable=b, validate='focusin', validatecommand=valid_amount)
 
     
     a.grid(row=0, column=0)
