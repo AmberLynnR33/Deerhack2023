@@ -10,6 +10,13 @@ class View:
     main_frame: tk.Frame
     main_menu: tk.Menu
 
+    _tab_out_frame: tk.Frame
+    _money_out_frame: tk.Frame
+    _money_in_frame: tk.Frame
+    _display_money_frame: tk.Frame
+    _goals_frame: tk.Frame
+
+
     def __init__(self):
         self.base_screen = tk.Tk()
         self._configure_main_screen
@@ -28,19 +35,19 @@ class View:
         self.frame_goals()
 
     def frame_tab_month(self) -> None:
-        tab_month_frame = tk.Frame(self.main_frame)
+        self._tab_month_frame = tk.Frame(self.main_frame)
 
     def frame_money_out(self) -> None:
-        money_out_frame = tk.Frame(self.main_frame)
+        self._money_out_frame = tk.Frame(self.main_frame)
 
     def frame_money_in(self) -> None:
-        money_in_frame = tk.Frame(self.main_frame)
+        self._money_in_frame = tk.Frame(self.main_frame)
 
     def frame_display_money(self) -> None:
-        display_money_frame = tk.Frame(self.main_frame)
+        self._display_money_frame = tk.Frame(self.main_frame)
 
     def frame_goals(self) -> None:
-        goals_frame = tk.Frame(self.main_frame)
+        self._goals_frame = tk.Frame(self.main_frame)
 
     def create_menu(self) -> None:
         pass
