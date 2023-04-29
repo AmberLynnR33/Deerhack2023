@@ -1,6 +1,6 @@
 from openpyxl import Workbook, load_workbook, worksheet
-# open or create a new file
-# if a file exists:
+
+
 class Model:
     """
     a class to represent an excel file
@@ -46,13 +46,13 @@ class Model:
         return None if the path is invalid
         """
         if file_name is not None:  # handle error
-            self.wb = load_workbook(file_name)  # each application is a sheet
+            self.wb = load_workbook(f'{file_name}.xlsx')  # each application is a sheet
 
-    def save_file(self) -> None:
+    def save_file(self, file_name: str) -> None:
         """
         saves the file
         """
-        self.wb.save('path-name.xlsx')  # save workbook
+        self.wb.save(f'{file_name}.xlsx')  # save workbook
 
     # we need to access the worksheets according to the month,
     # or create a new one
@@ -88,7 +88,7 @@ class Model:
         add the amount spent to this specific catagory
         """
         col_counter = 1  # counter for number of columns
-        row_counter = 1 # counter for number of columns
+        row_counter = 1  # counter for number of columns
         # accumulate for total cost
         self.cat[catagory] += amount
         if self.cat[catagory] > self.goals[catagory]:
@@ -97,6 +97,8 @@ class Model:
         for row in self.ws.iter_rows():
             if self.ws.cell(row_counter, 1).value == catagory:  # found row
                 for col in self.ws.iter_cols(min_col=2):
+                    if (self.ws.cell(row_counter, col_counter+1)).value is None:
+                        break
                     col_counter += 1  # count until we reach none
                 self.ws.cell(row_counter, col_counter + 1, amount)
                 break
@@ -115,7 +117,9 @@ class Model:
         for row in self.ws.iter_rows():
             names.append(self.ws.cell(row_counter, 1).value)
             if self.ws.cell(row_counter, 1).value == 'Amount Made':
-                for col in self.ws.iter_cols():
+                for col in self.ws.iter_cols(min_col=2):
+                    if (self.ws.cell(row_counter, col_counter+1)).value is None:
+                        break
                     col_counter += 1
                 self.ws.cell(row_counter, col_counter, amount)
                 break
