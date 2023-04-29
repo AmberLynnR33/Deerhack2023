@@ -33,6 +33,7 @@ class View:
     def __init__(self):
         self.model = None
         self.base_screen = tk.Tk()
+        self.base_screen.option_add('*tearOff', tk.FALSE)
 
         self._create_main_frame()
         self._create_menu()
@@ -85,7 +86,7 @@ class View:
         self._combobox_month_select.set('Select Year')
         self._combobox_month_select['state'] = 'readonly'
 
-        self._button_month_selection = ttk.Button(self._tab_month_frame, text="Get Month's Finances", 
+        self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
                                                   justify='center',
                                                   command=self.model.page_exists(self._combobox_month_select.get(),
                                                                                  self._combobox_year_select.get()))
@@ -111,9 +112,9 @@ class View:
 
         self._money_out_str = tk.StringVar()
 
-        self._money_out_entry = ttk.Entry(self._money_out_frame, self._money_out_entry)
+        self._money_out_entry = ttk.Entry(self._money_out_frame, textvariable=self._money_out_str)
 
-        self._submit_money_out = ttk.Button(self._money_out_frame, text="Add Money Spent", 
+        self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
                                            command=self.money_output)
         
@@ -134,9 +135,9 @@ class View:
         self._money_in_frame = tk.Frame(self._main_frame)
 
         self._money_in_str = tk.StringVar()
-        self._money_in_entry = ttk.Entry(self._money_in_frame, self._money_in_entry)
+        self._money_in_entry = ttk.Entry(self._money_in_frame, textvariable=self._money_in_entry)
 
-        self._submit_money_in = ttk.Button(self._money_in_frame, text="Add Money Earned", 
+        self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned", 
                                            justify='center',
                                            command=self.money_input)
 
@@ -235,10 +236,10 @@ class View:
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
 
-        self._check_goals = ttk.Button(self._goals_frame, 
+        self._check_goals = tk.Button(self._goals_frame, 
                                        text="Check Month's Goals", justify='center', command=self.popup_goals)
         
-        self._add_goal = ttk.Button(self._goals_frame, 
+        self._add_goal = tk.Button(self._goals_frame, 
                                        text="Add New Goal", justify='center', 
                                        command=self.model.add_goal(self._max_goal_amount.get(), self._max_spend_cat.get()))
         
@@ -247,7 +248,7 @@ class View:
 
         self._max_goal_amount_e = tk.StringVar()
 
-        self._max_goal_amount = ttk.Entry(self._goals_frame, self._max_goal_amount_e)
+        self._max_goal_amount = ttk.Entry(self._goals_frame, textvariable=self._max_goal_amount_e)
 
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
@@ -256,7 +257,7 @@ class View:
         self._add_goal.grid(row=0, column=1)
         self._goals_txt.grid(row=1, column=0)
         self._max_goal_amount.grid(row=2, column=0)
-        self._max_spend_cat.grid(row=2, col=1)
+        self._max_spend_cat.grid(row=2, column=1)
 
         self._check_goals.columnconfigure(0, weight=1)
         self._check_goals.rowconfigure(0, weight=1)
@@ -298,8 +299,22 @@ class View:
 
         #to create new files and load up existing ones
         self._file_menu = tk.Menu(self._main_menu)
+        self._save_menu = tk.Menu(self._main_menu)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load New Tracker', command=self.model.create_file)
         self._main_menu.add_cascade(menu=self._file_menu, label='Load Existing Tracker', command=self.model.open_file(self.load_file_path))
+
+
+        self._main_menu = tk.Menu(self.base_screen)
+        self.base_screen['menu'] = self._main_menu
+
+        #to create new files and load up existing ones
+        self._file_menu = tk.Menu(self._main_menu)
+        self._save_menu = tk.Menu(self._main_menu)
+        self._main_menu.add_cascade(menu=self._file_menu, label='File')
+        self._main_menu.add_cascade(menu=self._save_menu, label='Save', command=self.model.save_file)
+
+        self._file_menu.add_command(label="Open Existing File", command=self.model.open_file(self._load_file_path))
+        self._file_menu.add_command(label="Open New File", command=self.model.create_file)
 
 
     def _load_file_path() -> Optional[str]:
@@ -309,12 +324,10 @@ class View:
         except FileNotFoundError:
             return None
         
-
+    
     def _configure_main_screen(self) -> None:
-        self._main_frame.grid(row=0, col=0, sticky='n s e w')
+        self._main_frame.grid(row=0, column=0, sticky='n s e w')
         self._main_frame.columnconfigure(0, weight=1)
         self._main_frame.rowconfigure(0, weight=1)
         self.base_screen.title("Financial Tracker")
-
-        self.base_screen['menu'] = self._main_menu
 
