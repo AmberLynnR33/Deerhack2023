@@ -1,5 +1,6 @@
 from openpyxl import Workbook, load_workbook, worksheet
 import View
+from typing import Optional
 
 
 class Model:
@@ -17,7 +18,7 @@ class Model:
     cat: dict
     amount_made: float
     goals: dict
-    view: View()
+    view: View
 
     def __init__(self) -> None:
         """
@@ -47,13 +48,13 @@ class Model:
         return None if the path is invalid
         """
         if file_name is not None:  # handle error
-            self.wb = load_workbook(f'{file_name}.xlsx')  # each application is a sheet
+            self.wb = load_workbook(f'{file_name}')  # each application is a sheet
 
     def save_file(self, file_name: str) -> None:
         """
         saves the file
         """
-        self.wb.save(f'{file_name}.xlsx')  # save workbook
+        self.wb.save(f'{file_name}')  # save workbook
 
     # we need to access the worksheets according to the month,
     # or create a new one
@@ -158,11 +159,17 @@ class Model:
         """
         return self.amount_made
 
-    def total_spent(self, catagory: str) -> float:
+    def total_spent(self, catagory:Optional[str]=None) -> float:
         """
         returns the total amount of money spent for the specific catagory
         """
-        return self.cat[catagory]
+        if catagory is not None:
+            return self.cat[catagory]
+        else:
+            c = 0
+            for cat in self.cat:
+                c += self.cat[cat]
+            return c
 
     def spent_too_much(self) -> str:
         """

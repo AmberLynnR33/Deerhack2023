@@ -3,9 +3,8 @@ from Model import Model
 
 if __name__ == '__main__':
     model = Model()
-    view = View()
+    view = View(model)
 
     model.view = view
-    view.model = model
 
     view.base_screen.mainloop()

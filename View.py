@@ -30,8 +30,8 @@ class View:
     _display_money_frame: tk.Frame
     _goals_frame: tk.Frame
 
-    def __init__(self):
-        self.model = None
+    def __init__(self, model: Model):
+        self.model = model
         self.base_screen = tk.Tk()
         self.base_screen.option_add('*tearOff', tk.FALSE)
         self._validate_money = self.base_screen.register(self._validate_money_input)
@@ -142,7 +142,7 @@ class View:
 
         self._money_in_str = tk.StringVar()
         self._money_in_entry = ttk.Entry(self._money_in_frame, 
-                                         textvariable=self._money_in_entry,
+                                         textvariable=self._money_in_str,
                                          width=23, validate="key",
                                           validatecommand=(self._validate_money, '%P'))
 
@@ -235,7 +235,7 @@ class View:
         self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('subscriptions')))
         self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('essentials')))
         self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('edu')))
-        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('luxury')))
+        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('luxuries')))
         
 
     def _frame_goals(self) -> None:
@@ -243,10 +243,6 @@ class View:
 
         self._check_goals = tk.Button(self._goals_frame, 
                                        text="Check Month's Goals", justify='center', command=self._popup_goals)
-        
-        self._add_goal = tk.Button(self._goals_frame, 
-                                       text="Add New Goal", justify='center', 
-                                       command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
         
         
         self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
@@ -259,6 +255,10 @@ class View:
 
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
+
+        self._add_goal = tk.Button(self._goals_frame, 
+                                       text="Add New Goal", justify='center', 
+                                       command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
 
         self._check_goals.grid(row=0, column=0, pady=2)
         self._add_goal.grid(row=0, column=1, pady=2)
@@ -311,11 +311,16 @@ class View:
         self._main_menu.add_cascade(menu=self._file_menu, label='File')
         self._main_menu.add_cascade(menu=self._save_menu, label='Save', command=self.model.save_file)
 
-        self._file_menu.add_command(label="Open Existing File", command=(self.model.open_file, self._load_file_path))
-        self._file_menu.add_command(label="Open New File", command=self.model.create_file)
+        self._file_menu.add_command(label="Open Existing File", command=(self.existing_file))
+        self._file_menu.add_command(label="Open New File", command=self.model.new_file)
 
 
-    def _load_file_path() -> Optional[str]:
+    def existing_file(self) -> None:
+        path = self._load_file_path()
+        self.model.open_file(path)
+
+
+    def _load_file_path(self) -> Optional[str]:
         
         try:
             return askopenfilename()
@@ -335,7 +340,7 @@ class View:
 
     def _money_input(self) -> None:
         
-        self.model.add_money_in(self._money_in_entry.get())
+        self.model.add_money_in(float(self._money_in_entry.get()))
         self._money_update()
 
 
