@@ -75,32 +75,32 @@ class View:
     def _frame_tab_month(self) -> None:
         self._tab_month_frame = tk.Frame(self._main_frame)
 
-        month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
+        self.month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
                       'July', 'August', 'September', 'October', 'November',
                       'December']
         
-        year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
+        self.year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
 
-        self._combobox_month_select = ttk.Combobox(self._tab_month_frame, values=month_vals)
+        self._combobox_month_select = ttk.Combobox(self._tab_month_frame, values=self.month_vals)
         self._combobox_month_select.set('Select Month')
         self._combobox_month_select['state'] = 'readonly'
 
-        self._combobox_year_select = ttk.Combobox(self._tab_month_frame, values=year_vals)
+        self._combobox_year_select = ttk.Combobox(self._tab_month_frame, values=self.year_vals)
         self._combobox_year_select.set('Select Year')
         self._combobox_year_select['state'] = 'readonly'
 
         self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
                                                   justify='center')
 
-        self._button_month_selection.grid(row=0, column=0)
+        self._button_month_selection.grid(row=0, column=0, pady=2)
         self._button_month_selection.columnconfigure(0, weight=1)
         self._button_month_selection.rowconfigure(0, weight=1)
 
-        self._combobox_month_select.grid(row=1, column=0)
+        self._combobox_month_select.grid(row=1, column=0, pady=2)
         self._combobox_month_select.columnconfigure(0, weight=1)
         self._combobox_month_select.rowconfigure(0, weight=1)
 
-        self._combobox_year_select.grid(row=2, column=0)
+        self._combobox_year_select.grid(row=2, column=0, pady=2)
         self._combobox_year_select.columnconfigure(0, weight=1)
         self._combobox_year_select.rowconfigure(0, weight=1)
 
@@ -113,21 +113,23 @@ class View:
 
         self._money_out_str = tk.StringVar()
 
-        self._money_out_entry = ttk.Entry(self._money_out_frame, textvariable=self._money_out_str)
+        self._money_out_entry = ttk.Entry(self._money_out_frame, 
+                                          textvariable=self._money_out_str,
+                                          width=23)
 
         self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
                                            justify='center',
                                            command=self.money_output)
         
-        self._submit_money_out.grid(row=0, column=0)
+        self._submit_money_out.grid(row=0, column=0, pady=2)
         self._submit_money_out.columnconfigure(0, weight=1)
         self._submit_money_out.rowconfigure(0, weight=1)
 
-        self._money_out_cat.grid(row=1, column=0)
+        self._money_out_cat.grid(row=1, column=0, pady=2)
         self._money_out_cat.columnconfigure(0, weight=1)
         self._money_out_cat.rowconfigure(0, weight=1)
 
-        self._money_out_entry.grid(row=2, column=0)
+        self._money_out_entry.grid(row=2, column=0, pady=2)
         self._money_out_entry.columnconfigure(0, weight=1)
         self._money_out_entry.rowconfigure(0, weight=1)
 
@@ -141,11 +143,11 @@ class View:
         self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned",
                                           justify='center', command=self.money_input)
 
-        self._submit_money_in.grid(row=0, column=0)
+        self._submit_money_in.grid(row=0, column=0, pady=2)
         self._submit_money_in.columnconfigure(0, weight=1)
         self._submit_money_in.rowconfigure(0, weight=1)
 
-        self._money_in_entry.grid(row=1, column=0)
+        self._money_in_entry.grid(row=1, column=0, pady=2)
         self._money_in_entry.columnconfigure(0, weight=1)
         self._money_in_entry.rowconfigure(0, weight=1)
 
@@ -252,11 +254,11 @@ class View:
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
 
-        self._check_goals.grid(row=0, column=0)
-        self._add_goal.grid(row=0, column=1)
-        self._goals_txt.grid(row=1, column=0, columnspan=2)
-        self._max_goal_amount.grid(row=2, column=0)
-        self._max_spend_cat.grid(row=2, column=1)
+        self._check_goals.grid(row=0, column=0, pady=2)
+        self._add_goal.grid(row=0, column=1, pady=2)
+        self._goals_txt.grid(row=1, column=0, columnspan=2, pady=2)
+        self._max_goal_amount.grid(row=2, column=0, pady=2, padx=2)
+        self._max_spend_cat.grid(row=2, column=1, pady=2, padx=2)
 
         self._check_goals.columnconfigure(0, weight=1)
         self._check_goals.rowconfigure(0, weight=1)
@@ -276,7 +278,7 @@ class View:
 
     def popup_goals(self) -> None:
         popup = tk.Toplevel(self.base_screen)
-        popup.title('Goals Popup')
+        popup.title('Goals')
 
         goals = {'Luxury': 20}
         goals_str = 'My Goals'
