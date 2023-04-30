@@ -45,17 +45,17 @@ class Model:
         opens an existing file
         return None if the path is invalid
         """
-        file_name = self.save_file_path()
-        if file_name is not None:  # handle error
-            self.wb = load_workbook(f'{file_name}')  # each application is a sheet
+        self.file_name = self.save_file_path()
+        if self.file_name is not None:  # handle error
+            self.wb = load_workbook(f'{self.file_name}')  # each application is a sheet
         self.ws = self.wb.active
 
     def save_file(self) -> None:
         """
         saves the file
         """
-        file_name = self.save_file_path()
-        self.wb.save(f'{file_name}')  # save workbook
+        #file_name = self.save_file_path()
+        self.wb.save(f'{self.file_name}')  # save workbook
 
     def save_file_path(self) -> Optional[str]:
         try:
