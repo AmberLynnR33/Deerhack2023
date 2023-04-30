@@ -37,6 +37,12 @@ class View:
         self.base_screen.option_add('*tearOff', tk.FALSE)
         self._validate_money = self.base_screen.register(self._validate_money_input)
 
+        self.month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
+                           'July', 'August', 'September', 'October', 'November',
+                           'December']
+
+        self.year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
+
         self._create_main_frame()
         self._create_menu()
         self._configure_main_screen()
@@ -75,12 +81,6 @@ class View:
 
     def _frame_tab_month(self) -> None:
         self._tab_month_frame = tk.Frame(self._main_frame)
-
-        self.month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
-                           'July', 'August', 'September', 'October', 'November',
-                           'December']
-
-        self.year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
 
         self._combobox_month_select = ttk.Combobox(self._tab_month_frame, values=self.month_vals)
         self._combobox_month_select.set('Select Month')
@@ -229,14 +229,25 @@ class View:
 
 
     def _money_update(self) -> None:
-        self._money_earned_entry.set('Total Earned: $' + str(self.model.total_amount_earned()))
-        self._money_spent_entry.set('Total Spent $' + str(self.model.total_spent()))
+        total_e = self.model.total_amount_earned()
+        self._money_earned_entry.set(f'Total Earned: $ {total_e:.2f}')
+        total_s = self.model.total_spent()
+        self._money_spent_entry.set(f'Total Spent: $ {total_s:.2f}')
 
-        self._money_spent_bills_e.set('Bills: $' + str(self.model.total_spent('Bills')))
-        self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('Subscriptions')))
-        self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('Essentials')))
-        self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('Education / work')))
-        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('Luxuries')))
+        total_b = self.model.total_spent('Bills')
+        self._money_spent_bills_e.set(f'Bills: $ {total_b:.2f}')
+
+        total_sub = self.model.total_spent('Subscriptions')
+        self._money_spent_sub_e.set(f'Subscriptions: $ {total_sub:.2f}')
+
+        total_e = self.model.total_spent('Essentials')
+        self._money_spent_essn_e.set(f'Essentials: $ {total_e:.2f}')
+
+        total_edu = self.model.total_spent('Education / work')
+        self._money_spent_edu_e.set(f'Edu / Work: $ {total_edu:.2f}')
+
+        total_l = self.model.total_spent('Luxuries')
+        self._money_spent_lux_e.set(f'Luxuries: $ {total_l:.2f}')
 
 
     def _frame_goals(self) -> None:
@@ -318,7 +329,6 @@ class View:
 
 
     def existing_file(self) -> None:
-        path = self._load_file_path()
         self.model.open_file()
 
 
