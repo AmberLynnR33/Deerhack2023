@@ -1,7 +1,7 @@
 from openpyxl import Workbook, load_workbook, worksheet
 from typing import Optional
 from tkinter.filedialog import askopenfilename
-from view import View
+from View import View
 
 class Model:
     """
