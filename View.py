@@ -5,8 +5,9 @@ from tkinter.filedialog import askopenfilename
 from PIL import ImageTk, Image
 from typing import Optional
 
-from Model import Model
+from model import Model
 from CategoryCombobox import CategoryCombobox
+
 
 class View:
     """
@@ -76,9 +77,9 @@ class View:
         self._tab_month_frame = tk.Frame(self._main_frame)
 
         self.month_vals = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November',
-                      'December']
-        
+                           'July', 'August', 'September', 'October', 'November',
+                           'December']
+
         self.year_vals = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030']
 
         self._combobox_month_select = ttk.Combobox(self._tab_month_frame, values=self.month_vals)
@@ -89,10 +90,10 @@ class View:
         self._combobox_year_select.set('Select Year')
         self._combobox_year_select['state'] = 'readonly'
 
-        self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances", 
-                                                  justify='center',
-                                                  command=(self._valid_month_year, self._combobox_month_select.get(),
-                                                                                 self._combobox_year_select.get()))
+        self._button_month_selection = tk.Button(self._tab_month_frame, text="Get Month's Finances",
+                                                 justify='center',
+                                                 command=(self._valid_month_year, self._combobox_month_select.get(),
+                                                          self._combobox_year_select.get()))
 
         self._button_month_selection.grid(row=0, column=0, pady=2)
         self._button_month_selection.columnconfigure(0, weight=1)
@@ -115,15 +116,15 @@ class View:
 
         self._money_out_str = tk.StringVar()
 
-        self._money_out_entry = ttk.Entry(self._money_out_frame, 
+        self._money_out_entry = ttk.Entry(self._money_out_frame,
                                           textvariable=self._money_out_str,
                                           width=23, validate="key",
                                           validatecommand=(self._validate_money, '%P'))
 
-        self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent", 
+        self._submit_money_out = tk.Button(self._money_out_frame, text="Add Money Spent",
                                            justify='center',
                                            command=self._money_output)
-        
+
         self._submit_money_out.grid(row=0, column=0, pady=2)
         self._submit_money_out.columnconfigure(0, weight=1)
         self._submit_money_out.rowconfigure(0, weight=1)
@@ -141,14 +142,14 @@ class View:
         self._money_in_frame = tk.Frame(self._main_frame)
 
         self._money_in_str = tk.StringVar()
-        self._money_in_entry = ttk.Entry(self._money_in_frame, 
+        self._money_in_entry = ttk.Entry(self._money_in_frame,
                                          textvariable=self._money_in_str,
                                          width=23, validate="key",
-                                          validatecommand=(self._validate_money, '%P'))
+                                         validatecommand=(self._validate_money, '%P'))
 
-        self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned", 
-                                           justify='center',
-                                           command=self._money_input)
+        self._submit_money_in = tk.Button(self._money_in_frame, text="Add Money Earned",
+                                          justify='center',
+                                          command=self._money_input)
 
         self._submit_money_in.grid(row=0, column=0, pady=2)
         self._submit_money_in.columnconfigure(0, weight=1)
@@ -231,20 +232,20 @@ class View:
         self._money_earned_entry.set('Total Earned: $' + str(self.model.total_amount_earned()))
         self._money_spent_entry.set('Total Spent $' + str(self.model.total_spent()))
 
-        self._money_spent_bills_e.set('Bills: $' + str(self.model.total_spent('bills')))
-        self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('subscriptions')))
-        self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('essentials')))
-        self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('edu')))
-        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('luxuries')))
-        
+        self._money_spent_bills_e.set('Bills: $' + str(self.model.total_spent('Bills')))
+        self._money_spent_sub_e.set('Subscriptions $' + str(self.model.total_spent('Subscriptions')))
+        self._money_spent_essn_e.set('Essentials $' + str(self.model.total_spent('Essentials')))
+        self._money_spent_edu_e.set('Edu / Work $' + str(self.model.total_spent('Education / work')))
+        self._money_spent_lux_e.set('Luxuries $' + str(self.model.total_spent('Luxuries')))
+
 
     def _frame_goals(self) -> None:
         self._goals_frame = tk.Frame(self._main_frame)
 
-        self._check_goals = tk.Button(self._goals_frame, 
-                                       text="Check Month's Goals", justify='center', command=self._popup_goals)
-        
-        
+        self._check_goals = tk.Button(self._goals_frame,
+                                      text="Check Month's Goals", justify='center', command=self._popup_goals)
+
+
         self._goals_txt = ttk.Label(self._goals_frame, text='Add a maximum spending in <Catgeory> Below!')
 
         self._max_goal_amount_e = tk.StringVar()
@@ -256,9 +257,9 @@ class View:
         self._max_spend_cat = CategoryCombobox(self._goals_frame)
         self._max_spend_cat.configure_combobox()
 
-        self._add_goal = tk.Button(self._goals_frame, 
-                                       text="Add New Goal", justify='center', 
-                                       command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
+        self._add_goal = tk.Button(self._goals_frame,
+                                   text="Add New Goal", justify='center',
+                                   command=(self._valid_goal_input, self._max_spend_cat.get(), self._max_goal_amount.get()))
 
         self._check_goals.grid(row=0, column=0, pady=2)
         self._add_goal.grid(row=0, column=1, pady=2)
@@ -268,7 +269,7 @@ class View:
 
         self._check_goals.columnconfigure(0, weight=1)
         self._check_goals.rowconfigure(0, weight=1)
-        
+
         self._goals_txt.columnconfigure(0, weight=1)
         self._goals_txt.rowconfigure(0, weight=1)
 
@@ -293,7 +294,7 @@ class View:
             goal = tuple(goal)
 
             goals_str = goals_str + f'\nSpend no more than ${goal[1]} on {goal[0]}'
-        
+
         goals_info = ttk.Label(popup, text=goals_str)
 
         goals_info.grid(row=0, column=0, padx=10, pady=10)
@@ -313,21 +314,22 @@ class View:
 
         self._file_menu.add_command(label="Open Existing File", command=(self.existing_file))
         self._file_menu.add_command(label="Open New File", command=self.model.new_file)
+        self._save_menu.add_command(label='Save', command=self.model.save_file)
 
 
     def existing_file(self) -> None:
         path = self._load_file_path()
-        self.model.open_file(path)
+        self.model.open_file()
 
 
     def _load_file_path(self) -> Optional[str]:
-        
+
         try:
             return askopenfilename()
         except FileNotFoundError:
             return None
-        
-    
+
+
     def _configure_main_screen(self) -> None:
         self._main_frame.grid(row=0, column=0, sticky='n s e w')
         self._main_frame.columnconfigure(0, weight=1)
@@ -339,13 +341,13 @@ class View:
 
 
     def _money_input(self) -> None:
-        
+
         self.model.add_money_in(float(self._money_in_entry.get()))
         self._money_update()
 
 
     def _money_output(self) -> None:
-        self.model.add_money_out(self._money_out_entry.get(), self._money_out_cat.get())
+        self.model.add_money_out(float(self._money_out_entry.get()), self._money_out_cat.get())
         self._money_update()
 
 
