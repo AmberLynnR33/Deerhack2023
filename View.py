@@ -5,7 +5,7 @@ from tkinter.filedialog import askopenfilename
 from PIL import ImageTk, Image
 from typing import Optional
 
-from model import Model
+from Model import Model
 from CategoryCombobox import CategoryCombobox
 
 
