@@ -73,6 +73,7 @@ class Model:
         else:
             if f'{year},{month}' not in self.wb.sheetnames:
                 self._new_page(month, year)
+                self.ws = sheet
             else:
                 # set current sheet to this found sheet
                 for sheet in self.wb:

@@ -362,8 +362,8 @@ class View:
 
 
     def _valid_month_year(self, month: str, year: str) -> None:
-        if month in self.month_vals and year in self.year_vals:
-            self.model.page_exists(month, year)
+        #if month in self.month_vals and year in self.year_vals:
+        self.model.page_exists(month, year)
 
 
     def _validate_money_category(self, cat: str, money: float) -> bool:
