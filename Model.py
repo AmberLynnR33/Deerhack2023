@@ -1,7 +1,7 @@
 from openpyxl import Workbook, load_workbook, worksheet
-import View
 from typing import Optional
-
+from tkinter.filedialog import askopenfilename
+from view import View
 
 class Model:
     """
@@ -26,12 +26,12 @@ class Model:
         """
         self.wb = Workbook()
         self.ws = None  # empty workbook initially
-        self.cat = {'essentials': 0, 'bills': 0, 'subscriptions': 0, 'edu': 0,
-                    'luxuries': 0}
+        self.cat = {'Essentials': 0, 'Bills': 0, 'Subscriptions': 0,
+                    'Education / work': 0, 'Luxuries': 0}
         # initially all 0, since the user has not inputted anything yet
         self.amount_made = 0  # initially the user makes no money
-        self.goals = {'essentials': 0, 'bills': 0, 'subscriptions': 0, 'edu': 0,
-                      'luxuries': 0}
+        self.goals = {'Essentials': 0, 'Bills': 0, 'Subscriptions': 0,
+                      'Education / work': 0, 'Luxuries': 0}
         # initialize view
         self.view = None
 
@@ -40,34 +40,47 @@ class Model:
         initializes a new file
         """
         self.wb = Workbook()
+        self.ws = self.wb.active
 
     # otherwise, create new workbook
-    def open_file(self, file_name: str) -> None:
+    def open_file(self) -> None:
         """
         opens an existing file
         return None if the path is invalid
         """
+        file_name = self.save_file_path()
         if file_name is not None:  # handle error
             self.wb = load_workbook(f'{file_name}')  # each application is a sheet
+        self.ws = self.wb.active
 
-    def save_file(self, file_name: str) -> None:
+    def save_file(self) -> None:
         """
         saves the file
         """
+        file_name = self.save_file_path()
         self.wb.save(f'{file_name}')  # save workbook
+
+    def save_file_path(self) -> Optional[str]:
+        try:
+            return askopenfilename()
+        except FileNotFoundError:
+            return None
 
     # we need to access the worksheets according to the month,
     # or create a new one
     # this is where we will input data
     def page_exists(self, month: int, year: int) -> None:
         '''check if the worksheet with this month and year exists'''
-        if f'{year},{month}' not in self.wb.sheetnames:
-            self._new_page(month, year)
+        if self.ws.title == 'Sheet':
+            self.ws.title = f'{year},{month}'
         else:
-            # set current sheet to this found sheet
-            for sheet in self.wb:
-                if sheet.title == f'{year},{month}':
-                    self.ws = sheet
+            if f'{year},{month}' not in self.wb.sheetnames:
+                self._new_page(month, year)
+            else:
+                # set current sheet to this found sheet
+                for sheet in self.wb:
+                    if sheet.title == f'{year},{month}':
+                        self.ws = sheet
 
     def _new_page(self, month: int, year: int) -> None:
         '''
@@ -89,14 +102,17 @@ class Model:
         """
         add the amount spent to this specific catagory
         """
+        catagory = catagory.capitalize()
         col_counter = 1  # counter for number of columns
         row_counter = 1  # counter for number of columns
+        names = []
         # accumulate for total cost
-        self.cat[catagory] += amount
+        self.cat[catagory] += float(amount)
         if self.cat[catagory] > self.goals[catagory]:
             self.spent_too_much()
         # find the empty column for that row, and add the amount to it, test
         for row in self.ws.iter_rows():
+            names.append(self.ws.cell(row_counter, 1).value)
             if self.ws.cell(row_counter, 1).value == catagory:  # found row
                 for col in self.ws.iter_cols(min_col=2):
                     if (self.ws.cell(row_counter, col_counter+1)).value is None:
@@ -105,12 +121,14 @@ class Model:
                 self.ws.cell(row_counter, col_counter + 1, amount)
                 break
             row_counter += 1
+        if catagory not in names:
+            self.ws.append([f'{catagory}', amount])
 
     def add_money_in(self, amount: float) -> None:
         """
         allows the user to add the amount of money they make
         """
-        self.amount_made += amount
+        self.amount_made += float(amount)
         # add it to the spreadsheet, as a new row if amount made doesnt exist
         # get the names of the rows
         names = []
@@ -133,6 +151,7 @@ class Model:
         """
         allows the user to add in a goal for a specific catagory
         """
+        catagory = catagory.capitalize()
         self.goals[catagory] = amount
         # want to add this goal as a row in the excel
         names = []
@@ -159,14 +178,15 @@ class Model:
         """
         return self.amount_made
 
-    def total_spent(self, catagory:Optional[str]=None) -> float:
+    def total_spent(self, catagory=None) -> float:
         """
         returns the total amount of money spent for the specific catagory
         """
         if catagory is not None:
+            catagory = catagory.capitalize()
             return self.cat[catagory]
         else:
-            c = 0
+            c = 0  # counter, add up all the money
             for cat in self.cat:
                 c += self.cat[cat]
             return c
