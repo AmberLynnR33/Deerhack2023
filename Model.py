@@ -1,7 +1,6 @@
 from openpyxl import Workbook, load_workbook, worksheet
 from typing import Optional
 from tkinter.filedialog import askopenfilename
-from View import View
 
 class Model:
     """
@@ -18,7 +17,6 @@ class Model:
     cat: dict
     amount_made: float
     goals: dict
-    view: View
 
     def __init__(self) -> None:
         """
@@ -33,7 +31,6 @@ class Model:
         self.goals = {'Essentials': 0, 'Bills': 0, 'Subscriptions': 0,
                       'Education / work': 0, 'Luxuries': 0}
         # initialize view
-        self.view = None
 
     def new_file(self) -> None:
         """
